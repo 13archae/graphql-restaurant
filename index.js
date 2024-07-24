@@ -74,11 +74,17 @@ type restaurant {
 }
 type Dish{
   name: String
-  price: Int
+  price: Float
 }
 input restaurantInput{
+  id: Int
   name: String
   description: String
+  dishes: [dishesInput]
+}
+input dishesInput {
+  name: String
+  price: Float
 }
 type DeleteResponse{
   ok: Boolean!
@@ -92,17 +98,23 @@ type Mutation{
 // The root provides a resolver function for each API endpoint
 
 var root = {
-  restaurant: (arg) => {
-    // Your code goes here
-  },
-  restaurants: () => {
-    // Your code goes here
-  },
+  restaurant: (arg) => restaurants[arg.id],
+  restaurants: () => restaurants,
   setrestaurant: ({ input }) => {
-    // Your code goes here
+    restaurants.push({
+      id: input.id,
+      name: input.name,
+      description: input.description,
+      dishes: input.dishes,
+    });
+    return input;
   },
   deleterestaurant: ({ id }) => {
-    // Your code goes here
+    const notNull = Boolean(restaurants[id]);
+    let delRestaurant = restaurants[id];
+    restaurants = restaurants.filter((item) => item.id !== id);
+    console.log(`Deleted: ${JSON.stringify(delRestaurant)}`);
+    return { notNull };
   },
   editrestaurant: ({ id, ...restaurant }) => {
     // Your code goes here
@@ -120,4 +132,4 @@ app.use(
 var port = 5500;
 app.listen(5500, () => console.log("Running Graphql on Port:" + port));
 
-export default root;
+//export default root;
