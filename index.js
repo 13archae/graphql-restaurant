@@ -87,7 +87,7 @@ input dishesInput {
   price: Float
 }
 type DeleteResponse{
-  ok: Boolean!
+  ok: String!
 }
 type Mutation{
   setrestaurant(input: restaurantInput): restaurant
@@ -110,11 +110,11 @@ var root = {
     return input;
   },
   deleterestaurant: ({ id }) => {
-    const notNull = Boolean(restaurants[id]);
+    const ok = Boolean(restaurants[id]);
     let delRestaurant = restaurants[id];
     restaurants = restaurants.filter((item) => item.id !== id);
     console.log(`Deleted: ${JSON.stringify(delRestaurant)}`);
-    return { notNull };
+    return { ok };
   },
   editrestaurant: ({ id, ...restaurant }) => {
     // Your code goes here
